@@ -8,6 +8,8 @@
 
 ## Table of Contents
 
+- **[LangChain Tutorial](README_LANGCHAIN.md)** — New to LangChain? Learn models, prompts, chains, and tools first.
+
 1. [What is LangGraph? (Conceptual Overview)](#1-what-is-langgraph)
 2. [Environment Setup](#2-environment-setup)
 3. [Core Concepts You Must Understand First](#3-core-concepts)
@@ -43,6 +45,7 @@ This is not a straight line. It has **loops**, **decisions**, and **multiple act
 - **LangChain** = A library of building blocks (LLM wrappers, prompt templates, tools). Think of it as LEGO pieces.
 - **LangGraph** = The framework that orchestrates those pieces into a stateful workflow. Think of it as the instructions that say how to connect the LEGOs.
 - You can use LangGraph **without** LangChain, but they work beautifully together.
+- **New to LangChain?** See [README_LANGCHAIN.md](README_LANGCHAIN.md) for a step-by-step tutorial on models, prompts, chains, and tools.
 
 ---
 
@@ -1306,6 +1309,10 @@ app = graph.compile()
 ## Further Learning Resources
 
 - **Official LangGraph Docs**: https://docs.langchain.com (search "LangGraph")
+- **[LangGraph Install Guide](https://docs.langchain.com/oss/python/langgraph/install)** — Installation instructions
+- **[LangChain Overview](https://docs.langchain.com/oss/python/langchain/overview)** — Introduction to LangChain
+- **[LangChain Quickstart](https://docs.langchain.com/oss/python/langchain/quickstart)** — Build your first agent
+- **LangChain Tutorial**: See [README_LANGCHAIN.md](README_LANGCHAIN.md) for a beginner-friendly LangChain guide (models, prompts, chains, tools).
 - **LangChain Academy** (free course): https://academy.langchain.com
 - **GitHub Examples**: https://github.com/langchain-ai/langgraph/tree/main/examples
 - **LangSmith (observability)**: https://smith.langchain.com
