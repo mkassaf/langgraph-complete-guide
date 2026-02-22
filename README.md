@@ -439,9 +439,25 @@ Notice how the assistant remembers the previous question! That's the `messages` 
 
 ## 6. Example 3 — Agent with Tools (ReAct Pattern)
 
-An **agent** is an LLM that can decide to call **tools** (like a calculator, web search, or database query) and then use the results to answer. This is the most common agentic pattern, called **ReAct** (Reason + Act).
+An **agent** is an LLM that can decide to call **tools** (calculator, web search, database) and use the results to answer. This implements the **ReAct** pattern: **Reason** (LLM thinks) → **Act** (calls tool) → **Observe** (gets result) → Reason again → ... → final answer.
 
-The flow is: LLM → decides to use a tool → tool runs → result goes back to LLM → LLM decides again → ... → LLM gives final answer.
+**Why tools?** LLMs can't do math reliably, can't query live data, and can't access external APIs. Tools let the agent extend its capabilities by calling Python functions. The LLM decides *when* and *which* tool to use based on the user's question.
+
+**Graph flow:**
+```
+START → agent → [tools_condition] → tools (if tool_calls) OR END (if done)
+                      ↑                    |
+                      └────────────────────┘
+```
+The agent node invokes the LLM. If the LLM returns `tool_calls`, we route to the tools node, which executes them and appends `ToolMessage` results. Then we loop back to the agent so it can process the results and either call more tools or give a final text answer. The loop continues until the agent responds with plain text (no `tool_calls`).
+
+**Key components:**
+| Component | Purpose |
+|-----------|---------|
+| `@tool` | Decorator that turns a Python function into a LangChain tool. The LLM reads the docstring and parameters to decide when to call it. |
+| `llm.bind_tools(tools)` | Injects tool schemas into the LLM's context. The model can then return `tool_calls` instead of plain text. |
+| `ToolNode` | Pre-built node that executes `tool_calls` from the last message and returns `ToolMessage` objects. |
+| `tools_condition` | Pre-built router: if the last message has `tool_calls` → route to `"tools"`; otherwise → route to `END`. |
 
 ```python
 # file: langgraph_examples/example3_agent_with_tools.py
@@ -609,7 +625,7 @@ print(f"\nFinal Answer: {result['messages'][-1].content}")
 Final Answer: 127 × 34 = 4,318
 ```
 
-The graph automatically loops: Agent → Tool → Agent → Tool → Agent → END. You didn't write that loop explicitly — it emerges from the conditional edge.
+The graph automatically loops: Agent → Tool → Agent → Tool → Agent → END. You didn't write that loop explicitly — it emerges from the conditional edge. Each time the agent runs, `state["messages"]` grows: HumanMessage → AIMessage (with tool_calls) → ToolMessage(s) → AIMessage (final answer). The LLM sees the full history, including tool results, so it can reason over them and produce a coherent response.
 
 ---
 
