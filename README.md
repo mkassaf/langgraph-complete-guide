@@ -6,6 +6,8 @@
 
 All examples live in the [`langgraph_examples/`](langgraph_examples/) folder.
 
+**Keywords:** LangGraph, LangChain, AI agents, LLM, multi-agent systems, OpenAI, Python, research assistant, ReAct, tools, chatbot, supervisor pattern, tutorial
+
 ---
 
 ## Table of Contents
@@ -631,12 +633,28 @@ The graph automatically loops: Agent → Tool → Agent → Tool → Agent → E
 
 ## 7. Example 4 — Multi-Agent System with a Supervisor
 
-Now we build a **multi-agent system**. The key idea: instead of one general-purpose agent, we have **specialized agents** managed by a **supervisor** that decides which specialist to call.
+Now we build a **multi-agent system**. Instead of one general-purpose agent, we have **specialized agents** (math, research, writing) managed by a **supervisor** that decides which specialist to call next.
+
+**Why multi-agent?** A single agent with many tools can get confused or use the wrong one. Specialists are focused: the math agent only has `calculate`, the research agent only has `search_literature`. The supervisor orchestrates: for "What is 2^32 and what are transformers?", it routes to math_agent first, then research_agent, then FINISH.
 
 **Architecture:**
 ```
-User → Supervisor → [Math Agent | Research Agent | Writing Agent] → Supervisor → User
+User → Supervisor → [math_agent | research_agent | writing_agent] → Supervisor
+     ↑                    ↓ (if tool_calls)                            |
+     |              [math_tools | research_tools | writing_tools]      |
+     |                    ↓ (back to agent)                            |
+     └────────────────────────────────────────────────────────────────┘
 ```
+
+**Flow:** Supervisor reads the conversation and picks an agent (or FINISH). The agent runs, may call its tools (agent → tools → agent loop), then returns to the supervisor. The supervisor decides again: call another agent for a different sub-task, or FINISH.
+
+**Key components:**
+| Component | Purpose |
+|-----------|---------|
+| `SupervisorState` | Extends messages with a `next` field. The supervisor writes `state["next"]` = `"math_agent"` \| `"research_agent"` \| `"writing_agent"` \| `"FINISH"`. |
+| `with_structured_output(RoutingDecision)` | Forces the LLM to return a Pydantic object instead of free text — ensures valid routing (no parsing errors). |
+| `make_agent(llm, tools, system_prompt)` | Factory that creates agent nodes. Each agent gets different tools and a different system prompt. |
+| Separate tool nodes | Each agent has its own `ToolNode` (math_tools, research_tools, writing_tools) so tools don't get mixed. |
 
 ```python
 # file: langgraph_examples/example4_multi_agent_supervisor.py
@@ -868,6 +886,8 @@ def run_query(query: str):
 run_query("What is 2^32 and what are transformer neural networks?")
 run_query("Find papers on graph neural networks and calculate how many citations a paper gets per year if it has 450 citations in 3 years.")
 ```
+
+**What you'll see:** For a multi-part query like "What is 2^32 and what are transformers?", the supervisor first routes to `math_agent`, which calls `calculate` and returns. Control goes back to the supervisor, which then routes to `research_agent` for the transformer question. Each agent only sees and uses its own tools. The supervisor loops until it chooses FINISH.
 
 ---
 
