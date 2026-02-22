@@ -4,7 +4,7 @@
 > **Who this is for:** PhD students and researchers with Python knowledge but zero LangChain experience.
 > **Goal:** Master LangChain's building blocks (models, prompts, chains, tools) step by step — from simple LLM calls to agents that use tools.
 
-All examples live in the [`langchain_examples/`](langchain_examples/) folder.
+All examples live in the [`langchain_examples/`](langchain_examples/) folder. **New to Python?** See [README_PREREQUISITES.md](README_PREREQUISITES.md) first.
 
 ---
 

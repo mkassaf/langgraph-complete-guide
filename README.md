@@ -12,6 +12,7 @@ All examples live in the [`langgraph_examples/`](langgraph_examples/) folder.
 
 ## Table of Contents
 
+- **[Python Prerequisites](README_PREREQUISITES.md)** — New to Python? Quick refresher on variables, functions, dicts, type hints, and decorators.
 - **[LangChain Tutorial](README_LANGCHAIN.md)** — New to LangChain? Learn models, prompts, chains, and tools first.
 
 1. [What is LangGraph? (Conceptual Overview)](#1-what-is-langgraph)
