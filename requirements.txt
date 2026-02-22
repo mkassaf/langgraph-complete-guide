@@ -1,0 +1,17 @@
+# Core packages (from README - Environment Setup)
+langgraph
+langchain
+langchain-openai
+langchain-core
+python-dotenv
+
+# Required for Example 4 (structured output with BaseModel)
+pydantic
+
+# Optional: Debugging/visualization (for graph diagrams)
+# pygraphviz
+# mermaid-py
+
+# Optional: Alternative LLM providers
+# langchain-anthropic   # For Anthropic Claude
+# langchain-ollama     # For local models via Ollama
