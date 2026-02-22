@@ -1,4 +1,4 @@
-# file: langchain_example2_prompts.py
+# file: langchain_examples/langchain_example2_prompts.py
 # Example 2 — Prompt Templates
 
 from dotenv import load_dotenv

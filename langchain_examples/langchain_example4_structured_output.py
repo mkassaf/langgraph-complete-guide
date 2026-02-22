@@ -1,4 +1,4 @@
-# file: langchain_example4_structured_output.py
+# file: langchain_examples/langchain_example4_structured_output.py
 # Example 4 — Output Parsers & Structured Output
 
 from dotenv import load_dotenv

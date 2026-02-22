@@ -1,4 +1,4 @@
-# file: langchain_example6_agent.py
+# file: langchain_examples/langchain_example6_agent.py
 # Example 6 — Agent with Tools (LLM + Tool Binding)
 
 from dotenv import load_dotenv

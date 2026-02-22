@@ -1,4 +1,4 @@
-# file: langchain_example3_chain.py
+# file: langchain_examples/langchain_example3_chain.py
 # Example 3 — LCEL Chains (Pipe Your Steps)
 
 from dotenv import load_dotenv

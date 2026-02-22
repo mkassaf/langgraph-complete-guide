@@ -4,6 +4,8 @@
 > **Who this is for:** PhD students and researchers with Python knowledge but zero LangChain experience.
 > **Goal:** Master LangChain's building blocks (models, prompts, chains, tools) step by step — from simple LLM calls to agents that use tools.
 
+All examples live in the [`langchain_examples/`](langchain_examples/) folder.
+
 ---
 
 ## Table of Contents
@@ -130,7 +132,7 @@ def add(a: int, b: int) -> int:
 The simplest use: create an LLM, send a message, get a reply.
 
 ```python
-# file: langchain_example1_simple_llm.py
+# file: langchain_examples/langchain_example1_simple_llm.py
 
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
@@ -155,7 +157,7 @@ print(response.content)
 
 **Run it:**
 ```bash
-python langchain_example1_simple_llm.py
+python langchain_examples/langchain_example1_simple_llm.py
 ```
 
 **Key takeaway:** `ChatOpenAI.invoke()` accepts a string or a list of messages. The response has a `.content` attribute with the text.
@@ -167,7 +169,7 @@ python langchain_example1_simple_llm.py
 Use templates to inject variables and keep prompts maintainable.
 
 ```python
-# file: langchain_example2_prompts.py
+# file: langchain_examples/langchain_example2_prompts.py
 
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
@@ -199,7 +201,7 @@ print(response.content)
 **LCEL** (LangChain Expression Language) uses the `|` operator to chain components. Output of one step flows as input to the next.
 
 ```python
-# file: langchain_example3_chain.py
+# file: langchain_examples/langchain_example3_chain.py
 
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
@@ -233,7 +235,7 @@ print(result)  # Plain string, not an AIMessage
 Sometimes you want structured data (e.g., JSON, a Pydantic model) instead of raw text.
 
 ```python
-# file: langchain_example4_structured_output.py
+# file: langchain_examples/langchain_example4_structured_output.py
 
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
@@ -278,7 +280,7 @@ print(result.confidence)
 Tools are functions the LLM can invoke when it needs to (e.g., search, compute). The LLM uses the function name and docstring to decide when to call them.
 
 ```python
-# file: langchain_example5_tools.py
+# file: langchain_examples/langchain_example5_tools.py
 
 from langchain_core.tools import tool
 
@@ -307,7 +309,7 @@ print(add_numbers.invoke({"a": 3, "b": 5}))  # 8.0
 An agent is an LLM that can decide to call tools and use their results. This uses LangGraph under the hood; here we show the LangChain-style tool binding.
 
 ```python
-# file: langchain_example6_agent.py
+# file: langchain_examples/langchain_example6_agent.py
 
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI

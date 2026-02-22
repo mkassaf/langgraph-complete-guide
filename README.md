@@ -4,6 +4,8 @@
 > **Who this is for:** PhD students and researchers with Python knowledge but zero LangGraph/LangChain experience.
 > **Goal:** Build progressively more complex AI agent systems using the latest LangGraph (2025).
 
+All examples live in the [`langgraph_examples/`](langgraph_examples/) folder.
+
 ---
 
 ## Table of Contents
@@ -204,7 +206,7 @@ Let's start with the simplest possible graph — no AI, just Python functions co
 **What this does:** Takes a text string, passes it through two nodes that each append a letter, and returns the result.
 
 ```python
-# file: example1_hello_world.py
+# file: langgraph_examples/example1_hello_world.py
 
 # ─── Imports ─────────────────────────────────────────────────────────────────
 from typing import TypedDict          # For defining our state structure
@@ -276,7 +278,7 @@ print(result)  # {'text': 'START → A → B → C'}
 
 **Run it:**
 ```bash
-python example1_hello_world.py
+python langgraph_examples/example1_hello_world.py
 ```
 
 **Expected Output:**
@@ -303,7 +305,7 @@ Now let's add an actual LLM. We'll build a simple chatbot that remembers the con
 **New concept introduced:** `MessagesState` — a built-in state type that manages a list of conversation messages automatically.
 
 ```python
-# file: example2_chatbot.py
+# file: langgraph_examples/example2_chatbot.py
 
 # ─── Imports ─────────────────────────────────────────────────────────────────
 import os
@@ -411,7 +413,7 @@ while True:
 
 **Run it:**
 ```bash
-python example2_chatbot.py
+python langgraph_examples/example2_chatbot.py
 ```
 
 **Example Interaction:**
@@ -434,7 +436,7 @@ An **agent** is an LLM that can decide to call **tools** (like a calculator, web
 The flow is: LLM → decides to use a tool → tool runs → result goes back to LLM → LLM decides again → ... → LLM gives final answer.
 
 ```python
-# file: example3_agent_with_tools.py
+# file: langgraph_examples/example3_agent_with_tools.py
 
 import os
 from dotenv import load_dotenv
@@ -613,7 +615,7 @@ User → Supervisor → [Math Agent | Research Agent | Writing Agent] → Superv
 ```
 
 ```python
-# file: example4_multi_agent_supervisor.py
+# file: langgraph_examples/example4_multi_agent_supervisor.py
 
 import os
 from typing import Literal
@@ -855,7 +857,7 @@ This is a complete, production-inspired research assistant. It features:
 - **Persistent State**: Passes structured data between agents
 
 ```python
-# file: example5_research_pipeline.py
+# file: langgraph_examples/example5_research_pipeline.py
 
 import os
 from typing import TypedDict, Annotated, List, Optional

@@ -1,4 +1,4 @@
-# file: langchain_example1_simple_llm.py
+# file: langchain_examples/langchain_example1_simple_llm.py
 # Example 1 — Simple LLM Call (No Prompts, No Chains)
 
 from dotenv import load_dotenv

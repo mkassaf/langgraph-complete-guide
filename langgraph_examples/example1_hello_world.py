@@ -1,4 +1,4 @@
-# file: example1_hello_world.py
+# file: langgraph_examples/example1_hello_world.py
 
 # ─── Imports ─────────────────────────────────────────────────────────────────
 from typing import TypedDict          # For defining our state structure

@@ -1,10 +1,11 @@
-# file: example2_chatbot.py
+# file: langgraph_examples/example2_chatbot.py
 
 # ─── Imports ─────────────────────────────────────────────────────────────────
 import os
 from dotenv import load_dotenv
 
 # LangChain components for talking to OpenAI
+from langchain_core.runnables.config import P
 from langchain_openai import ChatOpenAI
 
 # LangGraph components
@@ -32,7 +33,7 @@ load_dotenv()  # Reads your .env file and sets environment variables
 # ChatOpenAI is a LangChain wrapper around OpenAI's chat API
 llm = ChatOpenAI(
     model="gpt-4o-mini",   # A fast, cheap model — good for testing
-    temperature=0.7,        # 0 = deterministic, 1 = creative. 0.7 is balanced
+    temperature=1.0,        # 0 = deterministic, 1 = creative. 0.7 is balanced
 )
 
 # ─── Define the Node ──────────────────────────────────────────────────────────
@@ -54,6 +55,9 @@ def chatbot_node(state: MessagesState) -> dict:
     # Build the full message list: [system] + [all previous messages]
     all_messages = [system_msg] + state["messages"]
     
+    print("===================  Message Start ============================")
+    print(all_messages)
+    print("===================  Message End ============================")
     # Call the LLM with the full conversation
     response = llm.invoke(all_messages)
     
