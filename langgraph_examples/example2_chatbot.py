@@ -47,6 +47,26 @@ def chatbot_node(state: MessagesState) -> dict:
     """
     # state["messages"] is a list of all messages so far
     # We prepend a system message to set the assistant's personality
+    #
+    # ─── SystemMessage and all_messages ─────────────────────────────────────
+    # SystemMessage is a LangChain message type for the "system" role — instructions
+    # that define the assistant's behavior (personality, rules, format). Chat APIs
+    # use three roles: system (instructions), user (HumanMessage), assistant (AIMessage).
+    #
+    # all_messages = [system_msg] + state["messages"] builds the full message list:
+    #   [system_msg, user_1, assistant_1, user_2, assistant_2, ...]
+    # The + operator concatenates lists: [system_msg] + state["messages"].
+    # The system message must be first so the model sees instructions before the chat.
+    #
+    # ─── Relation to "Context" in Generative AI ──────────────────────────────
+    # In generative AI, "context" = everything the model can "see" when generating.
+    # LLMs are stateless: they have NO memory. The only input they receive is the
+    # message list we send. So all_messages IS the context — the full conversation
+    # history plus system instructions. Without it, the model would reply to each
+    # message in isolation and couldn't reference earlier turns. By passing the
+    # full history, we give the model the context it needs for coherent multi-turn
+    # dialogue. (Context is limited by the model's context window, e.g. 128K tokens.)
+    #
     system_msg = SystemMessage(content="""
     You are a helpful research assistant for a PhD student.
     Be concise, precise, and always cite when you're uncertain.

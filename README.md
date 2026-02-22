@@ -304,6 +304,14 @@ Now let's add an actual LLM. We'll build a simple chatbot that remembers the con
 
 **New concept introduced:** `MessagesState` — a built-in state type that manages a list of conversation messages automatically.
 
+**Understanding `all_messages` and `SystemMessage`:**
+
+- **`SystemMessage`** — A LangChain message type for the "system" role. It carries instructions that define the assistant's behavior (personality, rules, format). Chat APIs use three roles: `system` (instructions), `user` (`HumanMessage`), and `assistant` (`AIMessage`).
+
+- **`all_messages = [system_msg] + state["messages"]`** — This builds the full message list sent to the LLM: `[system_msg, user_1, assistant_1, user_2, ...]`. The `+` operator concatenates the lists. The system message must be first so the model sees the instructions before the conversation.
+
+- **Relation to "Context" in Generative AI** — In generative AI, **context** means everything the model can "see" when generating a response. LLMs are **stateless**: they have no memory. The only input they receive is the message list we send. So `all_messages` *is* the context — the full conversation history plus system instructions. Without passing the full history, the model would reply to each message in isolation and couldn't reference earlier turns. By passing it, we give the model the context it needs for coherent multi-turn dialogue. (Context size is limited by the model's context window, e.g. 128K tokens.)
+
 ```python
 # file: langgraph_examples/example2_chatbot.py
 
