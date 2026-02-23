@@ -894,12 +894,22 @@ run_query("Find papers on graph neural networks and calculate how many citations
 
 ## 8. Example 5 — Research Multi-Agent Pipeline (Full System)
 
-This is a complete, production-inspired research assistant. It features:
-- **Planner Agent**: Breaks a research question into subtasks
-- **Search Agent**: Finds relevant literature
-- **Analysis Agent**: Synthesizes and analyzes findings
-- **Writer Agent**: Produces a polished research summary
-- **Persistent State**: Passes structured data between agents
+A **sequential pipeline** of four specialized agents that collaborate on a research task. Unlike the supervisor pattern (Example 4), this is a **fixed linear flow** — no conditional routing, no loops.
+
+**Architecture:**
+```
+START → planner → searcher → analyzer → writer → END
+```
+
+**Agents:**
+| Agent | Role |
+|-------|------|
+| Planner | Breaks the research question into 3-4 specific subtasks (investigable questions) |
+| Searcher | For each subtask, calls `search_arxiv`, summarizes findings |
+| Analyzer | Synthesizes all findings, identifies gaps and themes |
+| Writer | Produces a polished research summary report |
+
+**Key difference from Examples 2–4:** We use **structured state** (`ResearchState`) instead of `MessagesState`. Fields like `subtasks`, `literature_findings`, `analysis`, `final_report` are passed between agents. `Annotated[List[str], add]` means list fields are **appended** when nodes return updates (not overwritten). The search agent manually handles tool calls (one-shot) instead of using `ToolNode`; this keeps the pipeline simple.
 
 ```python
 # file: langgraph_examples/example5_research_pipeline.py
