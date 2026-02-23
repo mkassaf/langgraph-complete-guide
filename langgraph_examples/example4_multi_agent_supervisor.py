@@ -183,6 +183,7 @@ def supervisor_node(state: SupervisorState) -> dict:
     The supervisor reads the conversation and decides which specialist to call,
     or whether the task is complete.
     """
+    # Instructions for the supervisor: which agents exist and when to use each
     system_prompt = """You are a research team supervisor coordinating specialized agents:
     
     - math_agent: For calculations, statistics, mathematical analysis
@@ -194,12 +195,16 @@ def supervisor_node(state: SupervisorState) -> dict:
     If the last agent has provided a complete answer, choose FINISH.
     """
     
+    # Build full context: [system instructions] + [conversation history]
+    # state["messages"] = user question, agent replies, tool results, etc.
     messages = [SystemMessage(content=system_prompt)] + state["messages"]
+    # Invoke LLM; returns RoutingDecision (reasoning, next) not free text
     decision = supervisor_llm.invoke(messages)
     
     print(f"\n[SUPERVISOR] Routing to: {decision.next}")
     print(f"[SUPERVISOR] Reason: {decision.reasoning}")
     
+    # Write routing target to state; route_from_supervisor reads state["next"]
     return {"next": decision.next}
 
 # ─── Routing Function for Supervisor ──────────────────────────────────────────
