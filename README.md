@@ -14,6 +14,8 @@ All examples live in the [`langgraph_examples/`](langgraph_examples/) folder.
 
 - **[Python Prerequisites](README_PREREQUISITES.md)** — New to Python? Quick refresher on variables, functions, dicts, type hints, and decorators.
 - **[LangChain Tutorial](README_LANGCHAIN.md)** — New to LangChain? Learn models, prompts, chains, and tools first.
+- **[ReAct Pattern](README_REACT.md)** — Deep dive on ReAct (Reason + Act) with three examples.
+- **[Components Reference](README_COMPONENTS.md)** — Glossary of main classes: MessagesState, StateGraph, HumanMessage, SystemMessage, ToolNode, etc.
 
 1. [What is LangGraph? (Conceptual Overview)](#1-what-is-langgraph)
 2. [Environment Setup](#2-environment-setup)
