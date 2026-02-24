@@ -148,13 +148,17 @@ echo ".env" >> .gitignore
 
 ## 3. Core Concepts
 
-Before writing any code, understand these 4 fundamental ideas:
+Before writing any code, understand these 5 fundamental ideas. These are the building blocks for every LangGraph workflow.
+
+> **See also:** [Components Reference](README_COMPONENTS.md) for a full glossary with import statements and code snippets.
 
 ### 3.1 State — The Shared Memory
 
-The **State** is a Python dictionary that travels through every node in the graph. Think of it as a whiteboard that all agents can read and write on.
+The **Agent State** maintains information about the execution of the graph. Each node **writes** its output to the state. Subsequent nodes **read** the state to determine their inputs.
 
-You define what goes on the whiteboard upfront using `TypedDict`:
+**Critical rule:** No data is exchanged through edges. Data is *always* exchanged through the agent state. Edges only transfer *control flow* (i.e., "which node runs next").
+
+Think of the state as a whiteboard that all agents can read and write on. You define what goes on the whiteboard upfront using `TypedDict`:
 
 ```python
 from typing import TypedDict
@@ -165,11 +169,18 @@ class MyState(TypedDict):
     is_complete: bool     # Whether we are done
 ```
 
-Every node receives this state and returns a dictionary with only the fields it wants to update.
+Every node receives this state and returns a dictionary with only the fields it wants to update. LangGraph merges the update into the existing state automatically.
 
 ### 3.2 Nodes — The Actions
 
-A **node** is just a Python function. It takes the current state and returns updates:
+A **node** is a place in the graph where some logic is executed. It is a Python function that takes the current state and returns updates. When building agents, you deal with four types of nodes:
+
+| Node Type | Purpose | Example |
+|-----------|---------|---------|
+| **LLM node** | Integrates with a language model to analyze prompts, create actions, and review observations | `agent_node` calling `llm.invoke(messages)` |
+| **Tool node** | Executes tools requested by the LLM | `ToolNode([search, calculate])` |
+| **Action node** | Invokes another agent from this agent | A node that calls a sub-graph |
+| **Logic node** | Any custom logic outside the above types | Parsing, validation, formatting |
 
 ```python
 def my_node(state: MyState) -> dict:
@@ -185,12 +196,22 @@ def my_node(state: MyState) -> dict:
 
 ### 3.3 Edges — The Connections
 
-**Edges** define what happens after a node finishes:
+An **edge** connects nodes. It passes *control* from one node to another (but **not** data — data flows through the state).
 
-- **Normal edge**: Always go from node A to node B.
-- **Conditional edge**: Look at the state and decide which node to go to next.
+- **Basic edge**: When one node finishes processing, it *always* passes control to the next node. `graph.add_edge("node_a", "node_b")`
+- **Conditional edge**: A routing function inspects the state and decides which node to go to next. Based on the check, the graph may route the request to one of several alternate nodes. `graph.add_conditional_edges("agent", tools_condition)`
 
-### 3.4 The Graph — Putting It Together
+The graph must be correctly wired — every node must be reachable from START, and there should be no orphan nodes.
+
+### 3.4 Start and End
+
+A graph begins with a **START** block that connects to the first node to be executed. It also has an **END** block — a node routes to END when it determines the job is finished.
+
+```
+START → agent → [conditional check] → tools (if needed) → agent → END (when done)
+```
+
+### 3.5 The Graph — Putting It Together
 
 ```
 START → node_1 → node_2 → END
@@ -201,7 +222,7 @@ START → node_1 → node_2 → END
 You build the graph by:
 1. Creating a `StateGraph` with your state type
 2. Adding nodes (functions)
-3. Adding edges (connections)
+3. Adding edges (connections) — basic and conditional
 4. Compiling it into a runnable app
 
 ---
@@ -1397,18 +1418,26 @@ app = graph.compile()
 
 | Concept | What It Is | Example |
 |---|---|---|
+| **Graph Building Blocks** | | |
 | `StateGraph` | The graph builder object | `graph = StateGraph(State)` |
-| `State (TypedDict)` | Shared data between nodes | `class State(TypedDict): text: str` |
-| `Node` | A Python function in the graph | `def my_node(state): return {...}` |
-| `Normal Edge` | Always go from A to B | `graph.add_edge("A", "B")` |
-| `Conditional Edge` | Go to A or B based on state | `graph.add_conditional_edges(...)` |
+| `START` / `END` | Entry and exit points of the graph | `graph.add_edge(START, "first_node")` |
+| Basic Edge | Always go from A to B | `graph.add_edge("A", "B")` |
+| Conditional Edge | Go to A or B based on state | `graph.add_conditional_edges(...)` |
 | `compile()` | Makes graph runnable | `app = graph.compile()` |
-| `invoke()` | Run graph, wait for result | `result = app.invoke(initial_state)` |
-| `stream()` | Run graph, get step-by-step | `for event in app.stream(...)` |
+| `invoke()` / `stream()` | Run graph (blocking / step-by-step) | `result = app.invoke(initial_state)` |
+| **Node Types** | | |
+| LLM node | Calls a language model to reason | `response = llm.invoke(messages)` |
+| Tool node | Executes tools requested by LLM | `ToolNode([tool1, tool2])` |
+| Action node | Invokes another agent / sub-graph | Calls a sub-agent from within |
+| Logic node | Custom Python logic | Parsing, validation, formatting |
+| **State** | | |
+| Agent State | Shared memory all nodes read/write | Data flows through state, not edges |
+| `TypedDict` | Custom state schema | `class State(TypedDict): text: str` |
 | `MessagesState` | Built-in state for chats | Manages message list automatically |
-| `ToolNode` | Pre-built node that runs tools | `ToolNode([tool1, tool2])` |
-| `tools_condition` | Routes to tools or END | Checks if last message has tool calls |
+| **Tools & Routing** | | |
+| `@tool` | Turns a function into a tool | `@tool def search(q: str) -> str:` |
 | `bind_tools()` | Tells LLM what tools exist | `llm.bind_tools([tool1, tool2])` |
+| `tools_condition` | Routes to tools or END | Checks if last message has tool calls |
 
 ### Common Mistakes to Avoid
 

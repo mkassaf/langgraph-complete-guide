@@ -18,6 +18,36 @@
 
 ## 1. State & Graph (LangGraph)
 
+### Building Blocks of a Graph
+
+A LangGraph workflow is a **graph** made of four building blocks:
+
+| Building Block | Purpose |
+|----------------|---------|
+| **Node** | A place in the graph where logic is executed |
+| **Edge** | Connects nodes — passes *control* (not data) from one node to another |
+| **Start / End** | Special entry and exit points of the graph |
+| **Agent State** | Shared memory that every node reads from and writes to |
+
+**Critical rule:** No data is exchanged through edges. Data is *always* exchanged through the **agent state**. Edges only transfer *control flow*.
+
+---
+
+### Node Types
+
+When building agents, nodes fall into four categories:
+
+| Node Type | Role | Example |
+|-----------|------|---------|
+| **LLM node** | Integrates with a language model to analyze prompts, create actions, and review observations | `agent_node` that calls `llm.invoke(messages)` |
+| **Tool node** | Executes tools requested by the LLM | `ToolNode([search, calculate])` |
+| **Action node** | Invokes another agent from within this agent | A node that calls a sub-graph or sub-agent |
+| **Logic node** | Any custom Python logic outside the above types | Parsing, validation, formatting, routing logic |
+
+In our examples, you'll see these patterns repeatedly: an **LLM node** (the "brain") decides what to do, a **Tool node** carries out actions, and **Logic nodes** handle custom routing or post-processing.
+
+---
+
 ### `StateGraph`
 
 **Import:** `from langgraph.graph import StateGraph`
@@ -34,7 +64,7 @@ app = graph.compile()      # Compile into a runnable app
 result = app.invoke({"field": "value"})
 ```
 
-**Key idea:** A `StateGraph` is a *definition* — it describes the workflow. You must call `.compile()` to get a runnable app.
+**Key idea:** A `StateGraph` is a *definition* — it describes the workflow. You must call `.compile()` to get a runnable app. The graph must be correctly wired (no orphan nodes, every node reachable from START).
 
 ---
 
@@ -93,13 +123,38 @@ def node_a(state: State) -> dict:
 
 **What they are:** Special constants representing the entry and exit points of the graph.
 
-- **START** — The virtual node before any real node. Use it in `add_edge(START, "first_node")`.
-- **END** — The virtual node after the graph finishes. Use it in `add_edge("last_node", END)`.
+- **START** — The virtual start block. It connects to the first node that will be executed. Every graph must have exactly one `START` edge.
+- **END** — The virtual end block. A node may decide to end the graph when it determines that the job is finished. Multiple nodes can have edges to `END` (e.g., a conditional edge routes to `END` when the agent's answer is ready).
 
 **Usage:**
 ```python
 graph.add_edge(START, "node_a")   # Graph begins at node_a
 graph.add_edge("node_c", END)    # Graph ends after node_c
+```
+
+---
+
+### Agent State
+
+**What it is:** The shared memory that maintains information about the execution of the graph. Each node **writes** its output to the state. Subsequent nodes **read** the state to determine their inputs.
+
+**Key rule:** No data is exchanged through edges — data is always exchanged through the agent state. Edges only control *which node runs next*.
+
+**How it works in practice:**
+```
+Node A writes to state → Edge transfers control to Node B → Node B reads from state
+```
+
+You define the state shape using `TypedDict` or the built-in `MessagesState`. Each node receives the full state and returns a partial dict with only the fields it updated. LangGraph merges the update into the existing state.
+
+**Example flow:**
+```python
+def node_a(state):
+    return {"answer": "computed by A"}   # writes "answer" to state
+
+def node_b(state):
+    prev = state["answer"]               # reads "answer" from state
+    return {"summary": f"Based on: {prev}"}
 ```
 
 ---
@@ -258,21 +313,21 @@ graph.add_node("chatbot", chatbot_node)
 
 ---
 
-### `add_edge(source, target)`
+### `add_edge(source, target)` — Basic Edge
 
-**What it does:** Adds a fixed transition from one node to another. The graph always follows this edge.
+**What it does:** Adds a **fixed** transition from one node to another. When the source node finishes processing, it *always* passes control to the target node through this edge. There is no decision-making involved.
 
 ```python
-graph.add_edge(START, "node_a")
-graph.add_edge("node_a", "node_b")
-graph.add_edge("node_b", END)
+graph.add_edge(START, "node_a")       # Always start at node_a
+graph.add_edge("node_a", "node_b")    # After node_a, always go to node_b
+graph.add_edge("node_b", END)         # After node_b, always end
 ```
 
 ---
 
-### `add_conditional_edges(source, condition, path_map)`
+### `add_conditional_edges(source, condition, path_map)` — Conditional Edge
 
-**What it does:** Adds a conditional transition. A function inspects the state and returns which node to go to next.
+**What it does:** Adds a **conditional** transition. Instead of always going to the same next node, a routing function inspects the state and decides which node to go to next. Based on the check, the graph may route the request to one of several alternate nodes.
 
 ```python
 # tools_condition returns "tools" or "__end__" based on last message
@@ -289,6 +344,12 @@ def my_router(state):
 graph.add_conditional_edges("start", my_router)
 # Router returns the next node name directly
 ```
+
+**Basic edge vs. conditional edge:**
+| Edge Type | When to Use | Behavior |
+|-----------|-------------|----------|
+| **Basic** (`add_edge`) | Control always flows the same way | Source finishes → target runs |
+| **Conditional** (`add_conditional_edges`) | Next step depends on the state | Routing function picks which node runs next |
 
 ---
 
@@ -320,14 +381,27 @@ result = app.invoke({"messages": [HumanMessage(content="Hello")]})
 
 | Component | Package | Purpose |
 |-----------|---------|---------|
+| **Graph Building Blocks** | | |
 | `StateGraph` | langgraph.graph | Graph builder; defines workflow structure |
+| `START` / `END` | langgraph.graph | Virtual start / end blocks of the graph |
+| `add_edge` | StateGraph method | Basic edge — fixed control flow between nodes |
+| `add_conditional_edges` | StateGraph method | Conditional edge — routes based on state |
+| `compile()` | StateGraph method | Turns definition into a runnable app |
+| **Node Types** | | |
+| LLM node | (custom function) | Calls a language model to reason / decide |
+| Tool node / `ToolNode` | langgraph.prebuilt | Executes tool_calls from last message |
+| Action node | (custom function) | Invokes another agent or sub-graph |
+| Logic node | (custom function) | Custom Python logic (parsing, validation, etc.) |
+| **State** | | |
 | `MessagesState` | langgraph.graph | Built-in state for message lists (append semantics) |
-| `START` / `END` | langgraph.graph | Virtual entry/exit nodes |
+| `TypedDict` | typing (stdlib) | Custom state schema with typed fields |
+| Agent State | (concept) | Shared memory — nodes read/write; edges carry no data |
+| **Message Types** | | |
 | `HumanMessage` | langchain_core.messages | User message |
 | `SystemMessage` | langchain_core.messages | System instructions for the model |
 | `AIMessage` | langchain_core.messages | Assistant message (text or tool_calls) |
 | `ToolMessage` | langchain_core.messages | Tool execution result |
-| `ToolNode` | langgraph.prebuilt | Executes tool_calls from last message |
-| `tools_condition` | langgraph.prebuilt | Routes to tools or END based on tool_calls |
+| **Tools** | | |
 | `@tool` | langchain_core.tools | Turns a function into a callable tool |
 | `bind_tools` | Chat model method | Injects tool schemas into LLM context |
+| `tools_condition` | langgraph.prebuilt | Routes to tools or END based on tool_calls |
