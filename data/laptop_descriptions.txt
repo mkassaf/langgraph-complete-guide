@@ -1,0 +1,9 @@
+AlphaBook Pro: A sleek ultrabook with a 12th Gen Intel i7 processor, 16GB of DDR4 RAM, and a fast 1TB SSD. Ideal for professionals on the go. Thin and light design, 14-inch display.
+
+GammaAir X: Combines an AMD Ryzen 7 processor with 32GB of DDR4 memory and a 512GB NVMe SSD. Perfect for high performance in a portable design. Thin and light form factor.
+
+SpectraBook S: Designed for power users, featuring an Intel Core i9 processor, 64GB RAM, and a massive 2TB SSD. Workstation-class laptop perfect for intensive tasks like video editing and 3D rendering.
+
+OmegaPro G17: A gaming powerhouse with a Ryzen 9 5900HX CPU, 32GB RAM, and a 1TB SSD. Designed for gamers with a 17-inch high refresh rate display and powerful graphics card.
+
+NanoEdge Flex: Compact 13-inch laptop with Intel i5, 8GB RAM, 256GB SSD. Ultra-portable with flexible hinge design for tablet mode.

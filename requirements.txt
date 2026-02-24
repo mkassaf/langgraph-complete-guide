@@ -12,6 +12,12 @@ pydantic
 # pygraphviz
 # mermaid-py
 
+# For Example 8 (Product QnA with RAG + pricing)
+pandas
+langchain-community
+langchain-chroma
+langchain-text-splitters
+
 # Optional: Alternative LLM providers
 # langchain-anthropic   # For Anthropic Claude
 # langchain-ollama     # For local models via Ollama

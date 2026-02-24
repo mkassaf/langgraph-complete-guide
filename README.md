@@ -16,6 +16,7 @@ All examples live in the [`langgraph_examples/`](langgraph_examples/) folder.
 - **[LangChain Tutorial](README_LANGCHAIN.md)** — New to LangChain? Learn models, prompts, chains, and tools first.
 - **[ReAct Pattern](README_REACT.md)** — Deep dive on ReAct (Reason + Act) with three examples.
 - **[Components Reference](README_COMPONENTS.md)** — Glossary of main classes: MessagesState, StateGraph, HumanMessage, SystemMessage, ToolNode, etc.
+- **[Product QnA Chatbot](README_PRODUCT_QNA.md)** — Architecture diagram & summary for the RAG + pricing + memory example.
 
 1. [What is LangGraph? (Conceptual Overview)](#1-what-is-langgraph)
 2. [Environment Setup](#2-environment-setup)
@@ -25,8 +26,9 @@ All examples live in the [`langgraph_examples/`](langgraph_examples/) folder.
 6. [Example 3 — Agent with Tools (ReAct Pattern)](#6-example-3-agent-with-tools)
 7. [Example 4 — Multi-Agent System with a Supervisor](#7-example-4-multi-agent-supervisor)
 8. [Example 5 — Research Multi-Agent System (Full Pipeline)](#8-example-5-research-pipeline)
-9. [Debugging and Visualization Tips](#9-debugging-tips)
-10. [Quick Reference Cheat Sheet](#10-cheat-sheet)
+9. [Example 8 — Product QnA Chatbot (RAG + Pricing + Memory)](#9-example-8-product-qna-chatbot)
+10. [Debugging and Visualization Tips](#10-debugging-tips)
+11. [Quick Reference Cheat Sheet](#11-cheat-sheet)
 
 ---
 
@@ -1210,7 +1212,30 @@ print(f"Literature sets found: {len(result['literature_findings'])}")
 
 ---
 
-## 9. Debugging Tips
+## 9. Example 8 — Product QnA Chatbot (RAG + Pricing + Memory)
+
+A ReAct agent that answers laptop questions using **two tools**:
+- **get_laptop_price** — Looks up price from a CSV (substring match on product name)
+- **get_product_features** — RAG over product descriptions (Chroma + embeddings)
+
+**Key concepts:**
+- **create_react_agent** with **MemorySaver** (checkpointer) — conversation memory across turns
+- **create_retriever_tool** — Wraps a vector-store retriever as a tool
+- **Multi-user** — Different `thread_id` = separate conversation; "What is its price?" refers to the laptop that user asked about
+
+**Data:** `data/laptop_pricing.csv` and `data/laptop_descriptions.txt`
+
+**Run:**
+```bash
+pip install pandas langchain-community langchain-chroma langchain-text-splitters
+python langgraph_examples/example8_product_qna_agent.py
+```
+
+**Examples:** Single query (features + pricing), multi-turn conversation, multi-user demo.
+
+---
+
+## 10. Debugging Tips
 
 ### Visualize Your Graph
 
@@ -1298,7 +1323,7 @@ Once set, every time you run your graph, it automatically appears in the LangSmi
 
 ---
 
-## 10. Quick Reference Cheat Sheet
+## 11. Quick Reference Cheat Sheet
 
 ### Installation
 ```bash
