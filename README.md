@@ -1249,6 +1249,40 @@ for event in app.stream({"messages": [HumanMessage(content="Hello")]}):
 
 Add prints at the start of each node function — you already saw this in the examples with `[AGENT]`, `[TOOL]`, etc. This is the simplest and most effective debugging method.
 
+### Debug Mode in `create_react_agent`
+
+If you use LangGraph's prebuilt `create_react_agent` (instead of building the graph manually), set `debug=True` to get step-by-step output:
+
+```python
+from langgraph.prebuilt import create_react_agent
+
+agent = create_react_agent(model, tools=tools, state_modifier=system_prompt, debug=True)
+result = agent.invoke({"messages": [("user", "what is 2+3?")]})
+```
+
+**What `debug=True` prints:**
+
+| Prefix | Meaning |
+|--------|---------|
+| `[N:checkpoint]` | Full state at the end of step N (messages, metadata, token usage) |
+| `[N:tasks]` | Which node runs next and the input it receives (e.g. `agent` or `tools`) |
+| `[N:writes]` | What the node wrote to state (which channel, e.g. `messages` → new message) |
+
+**Example output:**
+```
+[-1:checkpoint] State at the end of step -1: {'messages': []}
+[0:tasks] Starting 1 task for step 0: __start__ -> {'messages': [('user', 'what is 2+3?')]}
+[0:writes] Finished step 0: messages -> [HumanMessage(...)]
+[1:tasks] agent -> {...}
+[1:writes] messages -> [AIMessage(tool_calls=[find_sum(x=2, y=3)])]
+[2:tasks] tools -> {...}
+[2:writes] messages -> [ToolMessage(content='5', name='find_sum')]
+[3:tasks] agent -> {...}
+[3:writes] messages -> [AIMessage(content='The sum of 2 and 3 is 5.')]
+```
+
+**See:** [`langgraph_examples/example7_create_react_agent_debug.py`](langgraph_examples/example7_create_react_agent_debug.py) for a runnable example.
+
 ### LangSmith (Optional — Advanced Observability)
 
 LangSmith is a free observability platform by the same team. It records every LLM call, tool call, and state transition visually:
