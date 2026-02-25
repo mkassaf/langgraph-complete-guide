@@ -17,6 +17,7 @@ All examples live in the [`langgraph_examples/`](langgraph_examples/) folder.
 - **[ReAct Pattern](README_REACT.md)** — Deep dive on ReAct (Reason + Act) with three examples.
 - **[Components Reference](README_COMPONENTS.md)** — Glossary of main classes: MessagesState, StateGraph, HumanMessage, SystemMessage, ToolNode, etc.
 - **[Product QnA Chatbot](README_PRODUCT_QNA.md)** — Architecture diagram & summary for the RAG + pricing + memory example.
+- **[Orders Agent & Chatbot](README_ORDERS_AGENT.md)** — Design doc for the orders agent: graph, tools (query + update), agent state, and data flow.
 
 1. [What is LangGraph? (Conceptual Overview)](#1-what-is-langgraph)
 2. [Environment Setup](#2-environment-setup)
@@ -27,8 +28,9 @@ All examples live in the [`langgraph_examples/`](langgraph_examples/) folder.
 7. [Example 4 — Multi-Agent System with a Supervisor](#7-example-4-multi-agent-supervisor)
 8. [Example 5 — Research Multi-Agent System (Full Pipeline)](#8-example-5-research-pipeline)
 9. [Example 8 — Product QnA Chatbot (RAG + Pricing + Memory)](#9-example-8-product-qna-chatbot)
-10. [Debugging and Visualization Tips](#10-debugging-tips)
-11. [Quick Reference Cheat Sheet](#11-cheat-sheet)
+10. [Example 9 — Orders Agent & Chatbot (Custom Graph + Query/Update Tools)](#10-example-9-orders-agent)
+11. [Debugging and Visualization Tips](#11-debugging-tips)
+12. [Quick Reference Cheat Sheet](#12-cheat-sheet)
 
 ---
 
@@ -1256,7 +1258,31 @@ python langgraph_examples/example8_product_qna_agent.py
 
 ---
 
-## 10. Debugging Tips
+## 10. Example 9 — Orders Agent & Chatbot (Custom Graph + Query/Update Tools)
+
+A **custom agentic chatbot** that can both **query** and **update** laptop orders. Unlike Example 8 (which uses `create_react_agent`), this example builds the ReAct loop **manually** with `StateGraph`, giving full control over nodes, edges, and routing.
+
+**Key differences from Example 8:**
+- **Manual graph build** — `StateGraph` with `add_node`, `add_conditional_edges`, `set_entry_point` (not `create_react_agent`)
+- **Read + write tools** — `get_order_details` (query) and `update_quantity` (action)
+- **OrdersAgent class** — Encapsulates graph, LLM, tools, and memory in one reusable class
+- **Custom conditional edge** — `is_tool_call` function routes to tools or END
+
+**Data:** `data/laptop_orders.csv` (Pandas DataFrame simulating an RDBMS)
+
+**Design doc & architecture diagram:** [README_ORDERS_AGENT.md](README_ORDERS_AGENT.md)
+
+**Run:**
+```bash
+pip install pandas langchain-openai python-dotenv langgraph
+python langgraph_examples/example9_orders_agent.py
+```
+
+Or open [`langgraph_examples/Orders Agent.ipynb`](langgraph_examples/Orders%20Agent.ipynb) and run the cells.
+
+---
+
+## 11. Debugging Tips
 
 ### Visualize Your Graph
 
@@ -1344,7 +1370,7 @@ Once set, every time you run your graph, it automatically appears in the LangSmi
 
 ---
 
-## 11. Quick Reference Cheat Sheet
+## 12. Quick Reference Cheat Sheet
 
 ### Installation
 ```bash
