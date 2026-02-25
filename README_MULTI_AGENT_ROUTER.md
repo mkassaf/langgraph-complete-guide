@@ -44,6 +44,42 @@ The routing pattern uses a classifier agent (the Router) to inspect each incomin
 
 ---
 
+## What is `functools.partial`?
+
+A key technique in this example is wrapping sub-agents as graph nodes using `functools.partial`. Understanding this standard-library function is essential.
+
+`functools.partial` creates a **new function** from an existing one by pre-filling some of its arguments. The remaining arguments are supplied when the new function is called later.
+
+```python
+import functools
+
+# Original function — takes 4 arguments
+def agent_node(state, agent, name, config):
+    result = agent.invoke(state, ...)
+    return {"messages": [AIMessage(result["messages"][-1].content)]}
+
+# Create a specialized version with `agent` and `name` already filled in
+product_qna_node = functools.partial(
+    agent_node, agent=product_qna_agent, name="Product_QnA_Agent"
+)
+```
+
+Now `product_qna_node(state, config)` is equivalent to calling `agent_node(state, agent=product_qna_agent, name="Product_QnA_Agent", config)`.
+
+**Why is this needed?** LangGraph node functions must accept `(state)` or `(state, config)`. But our `agent_node` helper needs extra arguments (`agent`, `name`) to know *which* sub-agent to invoke. `functools.partial` solves this by "baking in" those extra arguments ahead of time, producing a function with the right signature for LangGraph.
+
+```python
+# Without partial — LangGraph can't pass `agent` and `name`
+router_graph.add_node("Product_Agent", agent_node)  # ✗ missing args
+
+# With partial — `agent` and `name` are pre-filled
+router_graph.add_node("Product_Agent", product_qna_node)  # ✓ works
+```
+
+This is a standard Python pattern for adapting functions with extra parameters into callbacks that expect a fixed signature.
+
+---
+
 ## Architecture Diagram
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 700" font-family="Segoe UI, Arial, sans-serif" font-size="13">
