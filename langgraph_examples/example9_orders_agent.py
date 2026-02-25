@@ -85,6 +85,7 @@ def get_order_details(order_id: str) -> str:
     else:
         return match_order_df.iloc[0].to_dict()
 
+print(get_order_details("ORD-7311"))
 
 @tool
 def update_quantity(order_id: str, new_quantity: int) -> bool:

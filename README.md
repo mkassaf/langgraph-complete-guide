@@ -18,6 +18,7 @@ All examples live in the [`langgraph_examples/`](langgraph_examples/) folder.
 - **[Components Reference](README_COMPONENTS.md)** — Glossary of main classes: MessagesState, StateGraph, HumanMessage, SystemMessage, ToolNode, etc.
 - **[Product QnA Chatbot](README_PRODUCT_QNA.md)** — Architecture diagram & summary for the RAG + pricing + memory example.
 - **[Orders Agent & Chatbot](README_ORDERS_AGENT.md)** — Design doc for the orders agent: graph, tools (query + update), agent state, and data flow.
+- **[Reflection Summary Agent](README_REFLECTION_AGENT.md)** — Design doc for the reflection agent: generate → review → revise loop, no tools needed.
 
 1. [What is LangGraph? (Conceptual Overview)](#1-what-is-langgraph)
 2. [Environment Setup](#2-environment-setup)
@@ -29,8 +30,9 @@ All examples live in the [`langgraph_examples/`](langgraph_examples/) folder.
 8. [Example 5 — Research Multi-Agent System (Full Pipeline)](#8-example-5-research-pipeline)
 9. [Example 8 — Product QnA Chatbot (RAG + Pricing + Memory)](#9-example-8-product-qna-chatbot)
 10. [Example 9 — Orders Agent & Chatbot (Custom Graph + Query/Update Tools)](#10-example-9-orders-agent)
-11. [Debugging and Visualization Tips](#11-debugging-tips)
-12. [Quick Reference Cheat Sheet](#12-cheat-sheet)
+11. [Example 10 — Reflection Summary Agent (Generate → Review → Revise)](#11-example-10-reflection-agent)
+12. [Debugging and Visualization Tips](#12-debugging-tips)
+13. [Quick Reference Cheat Sheet](#13-cheat-sheet)
 
 ---
 
@@ -1282,7 +1284,60 @@ Or open [`langgraph_examples/Orders Agent.ipynb`](langgraph_examples/Orders%20Ag
 
 ---
 
-## 11. Debugging Tips
+## 11. Example 10 — Reflection Summary Agent (Generate → Review → Revise)
+
+A **summarizer chatbot** that uses the **reflection pattern** — two LLM nodes (summarizer and reviewer) iteratively improve a summary without any external tools. This is a fundamentally different pattern from tool-use (Examples 3, 8, 9) and planning (Examples 4, 5).
+
+**The reflection pattern:** One LLM generates output, another LLM critiques it, and the generator revises. This loop repeats for a fixed number of iterations, progressively improving quality.
+
+**Architecture:**
+```
+START → summarizer → [should_continue?] → reviewer (yes) → summarizer
+                                         → END (no — summary is ready)
+```
+
+**Key concepts:**
+- **No tools** — Both nodes are pure LLM calls with different system prompts
+- **Conditional edge** — `should_continue` caps the generate/review loop at N iterations
+- **SummaryAgent class** — Encapsulates graph, prompts, iteration limit, and memory
+- **MemorySaver** — Conversation memory per `thread_id` — user can provide follow-up feedback like "focus more on specs"
+
+**Nodes:**
+| Node | Role |
+|------|------|
+| **Summarizer** | Generates or revises a summary of the input document |
+| **Reviewer** | Critiques the summary, provides specific improvement recommendations |
+| **should_continue** | Conditional edge — returns `True` if under max iterations |
+
+**Data:** `data/ecosprint_specification.txt` (EcoSprint EV product spec)
+
+**Design doc & architecture diagram:** [README_REFLECTION_AGENT.md](README_REFLECTION_AGENT.md)
+
+**Run:**
+```bash
+pip install langchain-openai python-dotenv langgraph
+python langgraph_examples/example10_reflection_agent.py
+```
+
+Or open [`langgraph_examples/Reflection Agent.ipynb`](langgraph_examples/Reflection%20Agent.ipynb) and run the cells.
+
+**Example output (debug mode):**
+```
+Summarizer output:
+  The EcoSprint is a cutting-edge EV designed for eco-friendly drivers...
+
+Reviewer output:
+  The summary could improve by highlighting acceleration, top speed,
+  and available colors...
+
+Summarizer output (revised):
+  The EcoSprint is a cutting-edge EV with 200 HP, 250-mile range,
+  7.3s acceleration. Available in Midnight Black, Ocean Blue, Pearl White...
+```
+
+---
+
+## 12. Debugging Tips
 
 ### Visualize Your Graph
 
@@ -1370,7 +1425,7 @@ Once set, every time you run your graph, it automatically appears in the LangSmi
 
 ---
 
-## 12. Quick Reference Cheat Sheet
+## 13. Quick Reference Cheat Sheet
 
 ### Installation
 ```bash
