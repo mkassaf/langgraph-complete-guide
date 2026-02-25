@@ -1595,6 +1595,7 @@ app = graph.compile()
 
 ## Further Learning Resources
 
+- **[Next Steps](README_NEXT_STEPS.md)** — Recommended learning path: other frameworks (LlamaIndex, AutoGen, CrewAI), real-world tools, building agents for your organization, and key concepts to deepen.
 - **Official LangGraph Docs**: https://docs.langchain.com (search "LangGraph")
 - **[LangGraph Install Guide](https://docs.langchain.com/oss/python/langgraph/install)** — Installation instructions
 - **[LangChain Overview](https://docs.langchain.com/oss/python/langchain/overview)** — Introduction to LangChain
