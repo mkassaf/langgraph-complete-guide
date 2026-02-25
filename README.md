@@ -19,6 +19,7 @@ All examples live in the [`langgraph_examples/`](langgraph_examples/) folder.
 - **[Product QnA Chatbot](README_PRODUCT_QNA.md)** — Architecture diagram & summary for the RAG + pricing + memory example.
 - **[Orders Agent & Chatbot](README_ORDERS_AGENT.md)** — Design doc for the orders agent: graph, tools (query + update), agent state, and data flow.
 - **[Reflection Summary Agent](README_REFLECTION_AGENT.md)** — Design doc for the reflection agent: generate → review → revise loop, no tools needed.
+- **[Multi-Agent Router](README_MULTI_AGENT_ROUTER.md)** — Design doc for the multi-agent routing system: Router + Product Agent + Orders Agent.
 
 1. [What is LangGraph? (Conceptual Overview)](#1-what-is-langgraph)
 2. [Environment Setup](#2-environment-setup)
@@ -31,8 +32,9 @@ All examples live in the [`langgraph_examples/`](langgraph_examples/) folder.
 9. [Example 8 — Product QnA Chatbot (RAG + Pricing + Memory)](#9-example-8-product-qna-chatbot)
 10. [Example 9 — Orders Agent & Chatbot (Custom Graph + Query/Update Tools)](#10-example-9-orders-agent)
 11. [Example 10 — Reflection Summary Agent (Generate → Review → Revise)](#11-example-10-reflection-agent)
-12. [Debugging and Visualization Tips](#12-debugging-tips)
-13. [Quick Reference Cheat Sheet](#13-cheat-sheet)
+12. [Example 11 — Multi-Agent Router (Routing Pattern + Specialized Agents)](#12-example-11-multi-agent-router)
+13. [Debugging and Visualization Tips](#13-debugging-tips)
+14. [Quick Reference Cheat Sheet](#14-cheat-sheet)
 
 ---
 
@@ -1337,7 +1339,64 @@ Summarizer output (revised):
 
 ---
 
-## 12. Debugging Tips
+## 12. Example 11 — Multi-Agent Router (Routing Pattern + Specialized Agents)
+
+A **multi-agent system** that uses the **routing pattern** to direct user queries to the correct specialized agent. This combines the agents from Examples 8 and 9 into an orchestrated system with an LLM-based router.
+
+**Why multi-agent?** Individual agents are built to handle a specific domain. A given workflow may need multi-domain expertise. The routing pattern uses a classifier to inspect each query and forward it to the right specialist — mimicking how a team of humans works together, each leveraging their individual expertise.
+
+**Architecture:**
+```
+START → Router → [find_route] → Product_Agent  → END
+                               → Orders_Agent   → END
+                               → Small_Talk      → END
+                               → END (fallback)
+```
+
+**Key concepts:**
+- **Multi-agent composition** — Reusing existing agents (Examples 8 & 9) as nodes in a larger graph
+- **Routing pattern** — LLM classifies each query as PRODUCT, ORDER, SMALLTALK, or END
+- **Agent-as-node** — `functools.partial` wraps sub-agent invocation as a graph node
+- **One-way routing** — Unlike the supervisor loop (Example 4), each specialist routes directly to END
+- **Shared thread_id** — Each sub-agent maintains its own conversation memory
+
+**Agents:**
+| Agent | Domain | Tools |
+|-------|--------|-------|
+| **Product QnA Agent** | Laptop features & pricing | `get_laptop_price`, `get_product_features` (RAG) |
+| **Orders Agent** | Order management | `get_order_details`, `update_quantity` |
+| **Small Talk** | Greetings & farewells | None (simple LLM node) |
+
+**Data:** `data/laptop_pricing.csv`, `data/laptop_descriptions.txt`, `data/laptop_orders.csv`
+
+**Design doc & architecture diagram:** [README_MULTI_AGENT_ROUTER.md](README_MULTI_AGENT_ROUTER.md)
+
+**Run:**
+```bash
+pip install pandas langchain-openai langchain-community langchain-chroma langchain-text-splitters python-dotenv langgraph
+python langgraph_examples/example11_multi_agent_router.py
+```
+
+Or open [`langgraph_examples/Multi-Agent Router.ipynb`](langgraph_examples/Multi-Agent%20Router.ipynb) and run the cells.
+
+**Example (cross-domain conversation):**
+```
+User: How are you doing?
+Agent: Hello! I can help with laptop product features and order management.
+
+User: Please show me the details of order ORD-7311
+Agent: Order ORD-7311: NanoEdge Flex, Quantity 2, Delivery 2024-10-19
+
+User: Tell me about the features of SpectraBook laptop
+Agent: The SpectraBook S features an Intel Core i9, 64GB RAM, 2TB SSD...
+
+User: How much does it cost?
+Agent: The SpectraBook S is priced at $2,499.
+```
+
+---
+
+## 13. Debugging Tips
 
 ### Visualize Your Graph
 
@@ -1425,7 +1484,7 @@ Once set, every time you run your graph, it automatically appears in the LangSmi
 
 ---
 
-## 13. Quick Reference Cheat Sheet
+## 14. Quick Reference Cheat Sheet
 
 ### Installation
 ```bash
