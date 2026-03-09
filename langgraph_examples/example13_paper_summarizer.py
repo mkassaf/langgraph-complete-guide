@@ -14,7 +14,7 @@ Pipeline (per paper):
 Graph design:
   START → summarize_paper → END
 
-See also: README_PAPER_SUMMARIZER.md for design doc.
+See also: docs/README_PAPER_SUMMARIZER.md for design doc.
 """
 
 import csv

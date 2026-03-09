@@ -81,7 +81,7 @@ User Query → LLM (Reason) → [Tool Call?] → Tools (Act) → Observation →
 
 ## 4. Example 1: Math + Research Agent
 
-**Location:** [`langgraph_examples/example3_agent_with_tools.py`](langgraph_examples/example3_agent_with_tools.py)
+**Location:** [`langgraph_examples/example3_agent_with_tools.py`](../langgraph_examples/example3_agent_with_tools.py)
 
 **Tools:**
 - `add_numbers(a, b)` — Addition
@@ -111,7 +111,7 @@ The agent loops: Agent → Tools → Agent → ... until it responds with plain 
 
 ## 5. Example 2: Weather + Calculator Agent
 
-**Location:** [`langgraph_examples/ReAct Agent in LangGraph.ipynb`](langgraph_examples/ReAct%20Agent%20in%20LangGraph.ipynb) (Example 2 section)
+**Location:** [`langgraph_examples/ReAct Agent in LangGraph.ipynb`](../langgraph_examples/ReAct%20Agent%20in%20LangGraph.ipynb) (Example 2 section)
 
 **Tools:**
 - `get_weather(city)` — Get weather for a city (mock)
@@ -128,7 +128,7 @@ This example shows an agent that combines different tool types (weather + math) 
 
 ## 6. Example 3: Minimal Math Agent (find_sum + find_product)
 
-**Location:** [`langgraph_examples/example6_react_math_agent.py`](langgraph_examples/example6_react_math_agent.py)
+**Location:** [`langgraph_examples/example6_react_math_agent.py`](../langgraph_examples/example6_react_math_agent.py)
 
 **Tools:**
 - `find_sum(x, y)` — Add two integers

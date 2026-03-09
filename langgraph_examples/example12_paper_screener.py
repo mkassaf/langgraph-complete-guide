@@ -22,7 +22,7 @@ Graph design (per criterion):
   START → screener → [should_continue?] → reviewer (yes) → screener
                                          → END (no — decision is final)
 
-See also: README_PAPER_SCREENER.md for design doc.
+See also: docs/README_PAPER_SCREENER.md for design doc.
 """
 
 import csv

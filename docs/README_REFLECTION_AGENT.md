@@ -2,7 +2,7 @@
 
 > **Summarizer chatbot** that uses the **reflection pattern** to iteratively improve a summary of an input document through a generate → review → revise loop.
 
-**Files:** [`langgraph_examples/Reflection Agent.ipynb`](langgraph_examples/Reflection%20Agent.ipynb) | [`langgraph_examples/example10_reflection_agent.py`](langgraph_examples/example10_reflection_agent.py)
+**Files:** [`langgraph_examples/Reflection Agent.ipynb`](../langgraph_examples/Reflection%20Agent.ipynb) | [`langgraph_examples/example10_reflection_agent.py`](../langgraph_examples/example10_reflection_agent.py)
 
 ---
 
@@ -318,4 +318,4 @@ pip install langchain-openai python-dotenv langgraph
 python langgraph_examples/example10_reflection_agent.py
 ```
 
-Or open [`langgraph_examples/Reflection Agent.ipynb`](langgraph_examples/Reflection%20Agent.ipynb) and run the cells.
+Or open [`langgraph_examples/Reflection Agent.ipynb`](../langgraph_examples/Reflection%20Agent.ipynb) and run the cells.

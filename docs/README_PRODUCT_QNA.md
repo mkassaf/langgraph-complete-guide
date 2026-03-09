@@ -2,7 +2,7 @@
 
 > **ReAct agent** with RAG (product features) + pricing tool (CSV) + conversation memory (MemorySaver).
 
-**Files:** [`langgraph_examples/Product QnA Agent.ipynb`](langgraph_examples/Product%20QnA%20Agent.ipynb) | [`langgraph_examples/example8_product_qna_agent.py`](langgraph_examples/example8_product_qna_agent.py)
+**Files:** [`langgraph_examples/Product QnA Agent.ipynb`](../langgraph_examples/Product%20QnA%20Agent.ipynb) | [`langgraph_examples/example8_product_qna_agent.py`](../langgraph_examples/example8_product_qna_agent.py)
 
 ---
 
@@ -122,4 +122,4 @@ pip install pandas langchain-community langchain-chroma langchain-text-splitters
 python langgraph_examples/example8_product_qna_agent.py
 ```
 
-Or open [`langgraph_examples/Product QnA Agent.ipynb`](langgraph_examples/Product%20QnA%20Agent.ipynb) and run the cells.
+Or open [`langgraph_examples/Product QnA Agent.ipynb`](../langgraph_examples/Product%20QnA%20Agent.ipynb) and run the cells.

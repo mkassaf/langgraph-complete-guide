@@ -2,7 +2,7 @@
 
 > **Multi-agent system** that uses the **routing pattern** to direct user queries to the appropriate specialized agent — a Product QnA Agent or an Orders Agent — while handling small talk directly.
 
-**Files:** [`langgraph_examples/Multi-Agent Router.ipynb`](langgraph_examples/Multi-Agent%20Router.ipynb) | [`langgraph_examples/example11_multi_agent_router.py`](langgraph_examples/example11_multi_agent_router.py)
+**Files:** [`langgraph_examples/Multi-Agent Router.ipynb`](../langgraph_examples/Multi-Agent%20Router.ipynb) | [`langgraph_examples/example11_multi_agent_router.py`](../langgraph_examples/example11_multi_agent_router.py)
 
 ---
 
@@ -367,4 +367,4 @@ pip install pandas langchain-openai langchain-community langchain-chroma langcha
 python langgraph_examples/example11_multi_agent_router.py
 ```
 
-Or open [`langgraph_examples/Multi-Agent Router.ipynb`](langgraph_examples/Multi-Agent%20Router.ipynb) and run the cells.
+Or open [`langgraph_examples/Multi-Agent Router.ipynb`](../langgraph_examples/Multi-Agent%20Router.ipynb) and run the cells.

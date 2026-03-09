@@ -2,7 +2,7 @@
 
 > **Batch summarization system** that downloads academic paper PDFs, extracts text, and generates structured summaries using an LLM — producing a CSV of summaries ready for systematic review or literature mapping.
 
-**File:** [`langgraph_examples/example13_paper_summarizer.py`](langgraph_examples/example13_paper_summarizer.py)
+**File:** [`langgraph_examples/example13_paper_summarizer.py`](../langgraph_examples/example13_paper_summarizer.py)
 
 ---
 

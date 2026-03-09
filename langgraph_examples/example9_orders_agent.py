@@ -23,7 +23,7 @@ Graph design:
   START → orders_llm → [is_tool_call?] → orders_tools (if yes) → orders_llm
                                         → END (if no — final answer ready)
 
-See also: README_ORDERS_AGENT.md for architecture diagram and design doc.
+See also: docs/README_ORDERS_AGENT.md for architecture diagram and design doc.
 """
 
 import json

@@ -21,7 +21,7 @@ Graph design:
   START → summarizer → [should_continue?] → reviewer (yes) → summarizer
                                            → END (no — summary is ready)
 
-See also: README_REFLECTION_AGENT.md for architecture diagram and design doc.
+See also: docs/README_REFLECTION_AGENT.md for architecture diagram and design doc.
 """
 
 import uuid

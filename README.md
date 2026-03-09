@@ -12,16 +12,16 @@ All examples live in the [`langgraph_examples/`](langgraph_examples/) folder.
 
 ## Table of Contents
 
-- **[Python Prerequisites](README_PREREQUISITES.md)** — New to Python? Quick refresher on variables, functions, dicts, type hints, and decorators.
-- **[LangChain Tutorial](README_LANGCHAIN.md)** — New to LangChain? Learn models, prompts, chains, and tools first.
-- **[ReAct Pattern](README_REACT.md)** — Deep dive on ReAct (Reason + Act) with three examples.
-- **[Components Reference](README_COMPONENTS.md)** — Glossary of main classes: MessagesState, StateGraph, HumanMessage, SystemMessage, ToolNode, etc.
-- **[Product QnA Chatbot](README_PRODUCT_QNA.md)** — Architecture diagram & summary for the RAG + pricing + memory example.
-- **[Orders Agent & Chatbot](README_ORDERS_AGENT.md)** — Design doc for the orders agent: graph, tools (query + update), agent state, and data flow.
-- **[Reflection Summary Agent](README_REFLECTION_AGENT.md)** — Design doc for the reflection agent: generate → review → revise loop, no tools needed.
-- **[Multi-Agent Router](README_MULTI_AGENT_ROUTER.md)** — Design doc for the multi-agent routing system: Router + Product Agent + Orders Agent.
-- **[Paper Screener](README_PAPER_SCREENER.md)** — Design doc for the systematic review screener: reflection pattern applied to batch paper screening.
-- **[Paper Summarizer](README_PAPER_SUMMARIZER.md)** — Design doc for the PDF summarizer: download papers, extract text, generate structured summaries.
+- **[Python Prerequisites](docs/README_PREREQUISITES.md)** — New to Python? Quick refresher on variables, functions, dicts, type hints, and decorators.
+- **[LangChain Tutorial](docs/README_LANGCHAIN.md)** — New to LangChain? Learn models, prompts, chains, and tools first.
+- **[ReAct Pattern](docs/README_REACT.md)** — Deep dive on ReAct (Reason + Act) with three examples.
+- **[Components Reference](docs/README_COMPONENTS.md)** — Glossary of main classes: MessagesState, StateGraph, HumanMessage, SystemMessage, ToolNode, etc.
+- **[Product QnA Chatbot](docs/README_PRODUCT_QNA.md)** — Architecture diagram & summary for the RAG + pricing + memory example.
+- **[Orders Agent & Chatbot](docs/README_ORDERS_AGENT.md)** — Design doc for the orders agent: graph, tools (query + update), agent state, and data flow.
+- **[Reflection Summary Agent](docs/README_REFLECTION_AGENT.md)** — Design doc for the reflection agent: generate → review → revise loop, no tools needed.
+- **[Multi-Agent Router](docs/README_MULTI_AGENT_ROUTER.md)** — Design doc for the multi-agent routing system: Router + Product Agent + Orders Agent.
+- **[Paper Screener](docs/README_PAPER_SCREENER.md)** — Design doc for the systematic review screener: reflection pattern applied to batch paper screening.
+- **[Paper Summarizer](docs/README_PAPER_SUMMARIZER.md)** — Design doc for the PDF summarizer: download papers, extract text, generate structured summaries.
 
 1. [What is LangGraph? (Conceptual Overview)](#1-what-is-langgraph)
 2. [Environment Setup](#2-environment-setup)
@@ -64,7 +64,7 @@ This is not a straight line. It has **loops**, **decisions**, and **multiple act
 - **LangChain** = A library of building blocks (LLM wrappers, prompt templates, tools). Think of it as LEGO pieces.
 - **LangGraph** = The framework that orchestrates those pieces into a stateful workflow. Think of it as the instructions that say how to connect the LEGOs.
 - You can use LangGraph **without** LangChain, but they work beautifully together.
-- **New to LangChain?** See [README_LANGCHAIN.md](README_LANGCHAIN.md) for a step-by-step tutorial on models, prompts, chains, and tools.
+- **New to LangChain?** See [README_LANGCHAIN.md](docs/README_LANGCHAIN.md) for a step-by-step tutorial on models, prompts, chains, and tools.
 
 ---
 
@@ -160,7 +160,7 @@ echo ".env" >> .gitignore
 
 Before writing any code, understand these 5 fundamental ideas. These are the building blocks for every LangGraph workflow.
 
-> **See also:** [Components Reference](README_COMPONENTS.md) for a full glossary with import statements and code snippets.
+> **See also:** [Components Reference](docs/README_COMPONENTS.md) for a full glossary with import statements and code snippets.
 
 ### 3.1 State — The Shared Memory
 
@@ -1278,7 +1278,7 @@ A **custom agentic chatbot** that can both **query** and **update** laptop order
 
 **Data:** `data/laptop_orders.csv` (Pandas DataFrame simulating an RDBMS)
 
-**Design doc & architecture diagram:** [README_ORDERS_AGENT.md](README_ORDERS_AGENT.md)
+**Design doc & architecture diagram:** [README_ORDERS_AGENT.md](docs/README_ORDERS_AGENT.md)
 
 **Run:**
 ```bash
@@ -1317,7 +1317,7 @@ START → summarizer → [should_continue?] → reviewer (yes) → summarizer
 
 **Data:** `data/ecosprint_specification.txt` (EcoSprint EV product spec)
 
-**Design doc & architecture diagram:** [README_REFLECTION_AGENT.md](README_REFLECTION_AGENT.md)
+**Design doc & architecture diagram:** [README_REFLECTION_AGENT.md](docs/README_REFLECTION_AGENT.md)
 
 **Run:**
 ```bash
@@ -1373,7 +1373,7 @@ START → Router → [find_route] → Product_Agent  → END
 
 **Data:** `data/laptop_pricing.csv`, `data/laptop_descriptions.txt`, `data/laptop_orders.csv`
 
-**Design doc & architecture diagram:** [README_MULTI_AGENT_ROUTER.md](README_MULTI_AGENT_ROUTER.md)
+**Design doc & architecture diagram:** [README_MULTI_AGENT_ROUTER.md](docs/README_MULTI_AGENT_ROUTER.md)
 
 **Run:**
 ```bash
@@ -1422,7 +1422,7 @@ papers.csv → [for each paper] → START → Screener → [should_continue?] �
 - **Structured output parsing** — Regex extracts `Decision: INCLUDE/EXCLUDE` and `Reason:` from LLM text
 - **Per-paper memory** — Each paper gets a unique `thread_id` for its reflection loop
 
-**Design doc:** [README_PAPER_SCREENER.md](README_PAPER_SCREENER.md)
+**Design doc:** [README_PAPER_SCREENER.md](docs/README_PAPER_SCREENER.md)
 
 **Run:**
 ```bash
@@ -1460,7 +1460,7 @@ papers.csv → [for each paper] → Download PDF → Extract text → START → 
 - **Batch processing with caching** — PDFs are cached locally, so re-runs skip downloads
 - **Per-paper memory** — Each paper gets a unique `thread_id`
 
-**Design doc:** [README_PAPER_SUMMARIZER.md](README_PAPER_SUMMARIZER.md)
+**Design doc:** [README_PAPER_SUMMARIZER.md](docs/README_PAPER_SUMMARIZER.md)
 
 **Run:**
 ```bash
@@ -1671,12 +1671,12 @@ app = graph.compile()
 
 ## Further Learning Resources
 
-- **[Next Steps](README_NEXT_STEPS.md)** — Recommended learning path: other frameworks (LlamaIndex, AutoGen, CrewAI), real-world tools, building agents for your organization, and key concepts to deepen.
+- **[Next Steps](docs/README_NEXT_STEPS.md)** — Recommended learning path: other frameworks (LlamaIndex, AutoGen, CrewAI), real-world tools, building agents for your organization, and key concepts to deepen.
 - **Official LangGraph Docs**: https://docs.langchain.com (search "LangGraph")
 - **[LangGraph Install Guide](https://docs.langchain.com/oss/python/langgraph/install)** — Installation instructions
 - **[LangChain Overview](https://docs.langchain.com/oss/python/langchain/overview)** — Introduction to LangChain
 - **[LangChain Quickstart](https://docs.langchain.com/oss/python/langchain/quickstart)** — Build your first agent
-- **LangChain Tutorial**: See [README_LANGCHAIN.md](README_LANGCHAIN.md) for a beginner-friendly LangChain guide (models, prompts, chains, tools).
+- **LangChain Tutorial**: See [README_LANGCHAIN.md](docs/README_LANGCHAIN.md) for a beginner-friendly LangChain guide (models, prompts, chains, tools).
 - **LangChain Academy** (free course): https://academy.langchain.com
 - **GitHub Examples**: https://github.com/langchain-ai/langgraph/tree/main/examples
 - **LangSmith (observability)**: https://smith.langchain.com

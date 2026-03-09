@@ -28,7 +28,7 @@ Graph design:
                                  → Small_Talk      → END
                                  → END (fallback)
 
-See also: README_MULTI_AGENT_ROUTER.md for architecture diagram and design doc.
+See also: docs/README_MULTI_AGENT_ROUTER.md for architecture diagram and design doc.
 """
 
 import functools

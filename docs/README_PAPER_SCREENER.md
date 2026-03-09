@@ -2,7 +2,7 @@
 
 > **Agentic screening system** that uses the **reflection pattern** to screen academic papers against multiple inclusion and exclusion criteria for a systematic review, outputting INCLUDE/EXCLUDE decisions with per-criterion reasoning.
 
-**File:** [`langgraph_examples/example12_paper_screener.py`](langgraph_examples/example12_paper_screener.py)
+**File:** [`langgraph_examples/example12_paper_screener.py`](../langgraph_examples/example12_paper_screener.py)
 
 ---
 

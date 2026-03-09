@@ -2,7 +2,7 @@
 
 > **Custom agentic chatbot** that can **query** and **update** laptop orders using function tools, an LLM, and conversation memory.
 
-**Files:** [`langgraph_examples/Orders Agent.ipynb`](langgraph_examples/Orders%20Agent.ipynb) | [`langgraph_examples/example9_orders_agent.py`](langgraph_examples/example9_orders_agent.py)
+**Files:** [`langgraph_examples/Orders Agent.ipynb`](../langgraph_examples/Orders%20Agent.ipynb) | [`langgraph_examples/example9_orders_agent.py`](../langgraph_examples/example9_orders_agent.py)
 
 ---
 
@@ -299,4 +299,4 @@ pip install pandas langchain-openai python-dotenv langgraph
 python langgraph_examples/example9_orders_agent.py
 ```
 
-Or open [`langgraph_examples/Orders Agent.ipynb`](langgraph_examples/Orders%20Agent.ipynb) and run the cells.
+Or open [`langgraph_examples/Orders Agent.ipynb`](../langgraph_examples/Orders%20Agent.ipynb) and run the cells.

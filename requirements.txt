@@ -8,15 +8,22 @@ python-dotenv
 # Required for Example 4 (structured output with BaseModel)
 pydantic
 
-# Optional: Debugging/visualization (for graph diagrams)
-# pygraphviz
-# mermaid-py
-
 # For Example 8 (Product QnA with RAG + pricing)
 pandas
 langchain-community
 langchain-chroma
 langchain-text-splitters
+
+# For Example 13 (Paper Summarizer - PDF download & extraction)
+pypdf
+requests
+
+# For Example 14 (Paper Report - PDF generation)
+fpdf2
+
+# Optional: Debugging/visualization (for graph diagrams)
+# pygraphviz
+# mermaid-py
 
 # Optional: Alternative LLM providers
 # langchain-anthropic   # For Anthropic Claude
