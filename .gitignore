@@ -207,3 +207,6 @@ marimo/_lsp/
 __marimo__/
 .specstory/*
 .specstory/history/*
+
+# Generated output (PDFs, screening results, summaries)
+output/

@@ -20,6 +20,8 @@ All examples live in the [`langgraph_examples/`](langgraph_examples/) folder.
 - **[Orders Agent & Chatbot](README_ORDERS_AGENT.md)** — Design doc for the orders agent: graph, tools (query + update), agent state, and data flow.
 - **[Reflection Summary Agent](README_REFLECTION_AGENT.md)** — Design doc for the reflection agent: generate → review → revise loop, no tools needed.
 - **[Multi-Agent Router](README_MULTI_AGENT_ROUTER.md)** — Design doc for the multi-agent routing system: Router + Product Agent + Orders Agent.
+- **[Paper Screener](README_PAPER_SCREENER.md)** — Design doc for the systematic review screener: reflection pattern applied to batch paper screening.
+- **[Paper Summarizer](README_PAPER_SUMMARIZER.md)** — Design doc for the PDF summarizer: download papers, extract text, generate structured summaries.
 
 1. [What is LangGraph? (Conceptual Overview)](#1-what-is-langgraph)
 2. [Environment Setup](#2-environment-setup)
@@ -33,8 +35,10 @@ All examples live in the [`langgraph_examples/`](langgraph_examples/) folder.
 10. [Example 9 — Orders Agent & Chatbot (Custom Graph + Query/Update Tools)](#10-example-9-orders-agent)
 11. [Example 10 — Reflection Summary Agent (Generate → Review → Revise)](#11-example-10-reflection-agent)
 12. [Example 11 — Multi-Agent Router (Routing Pattern + Specialized Agents)](#12-example-11-multi-agent-router)
-13. [Debugging and Visualization Tips](#13-debugging-tips)
-14. [Quick Reference Cheat Sheet](#14-cheat-sheet)
+13. [Example 12 — Paper Screener (Reflection for Systematic Review)](#13-example-12-paper-screener)
+14. [Example 13 — Paper Summarizer (Download PDFs & Summarize)](#14-example-13-paper-summarizer)
+15. [Debugging and Visualization Tips](#15-debugging-tips)
+16. [Quick Reference Cheat Sheet](#16-cheat-sheet)
 
 ---
 
@@ -1396,7 +1400,79 @@ Agent: The SpectraBook S is priced at $2,499.
 
 ---
 
-## 13. Debugging Tips
+## 13. Example 12 — Paper Screener (Reflection for Systematic Review)
+
+A practical, **research-oriented** agentic system that screens academic papers for a systematic review. It reads `data/papers.csv` (99 papers), applies an exclusion criterion using the **reflection pattern**, and outputs `data/screening_results.csv` with INCLUDE/EXCLUDE decisions and reasoning.
+
+**Why reflection for screening?** A single LLM call can misapply nuanced criteria (e.g., incorrectly excluding arXiv papers). The reflection loop catches these mistakes: a reviewer checks the screener's logic, and the screener revises if needed.
+
+**Architecture:**
+```
+papers.csv → [for each paper] → START → Screener → [should_continue?] → Reviewer (yes) → Screener
+                                                                        → END (no)     → screening_results.csv
+```
+
+**Exclusion criterion:**
+> "Non-scholarly publications (e.g., blogs, opinion pieces, white papers) — excluding recognized preprint repositories (e.g., arXiv)."
+> Clarification: arXiv papers should NOT be excluded under this criterion.
+
+**Key concepts:**
+- **Reflection for quality** — Screener decides, reviewer checks, screener revises
+- **Batch processing** — Pipeline iterates over all papers in the CSV
+- **Structured output parsing** — Regex extracts `Decision: INCLUDE/EXCLUDE` and `Reason:` from LLM text
+- **Per-paper memory** — Each paper gets a unique `thread_id` for its reflection loop
+
+**Design doc:** [README_PAPER_SCREENER.md](README_PAPER_SCREENER.md)
+
+**Run:**
+```bash
+pip install pandas langchain-openai python-dotenv langgraph
+python langgraph_examples/example12_paper_screener.py
+```
+
+**Input:** `data/papers.csv` | **Output:** `data/screening_results.csv`
+
+---
+
+## 14. Example 13 — Paper Summarizer (Download PDFs & Summarize)
+
+A **batch PDF summarization pipeline** that downloads academic papers, extracts their text, and generates structured summaries using an LLM. Designed for systematic reviews and literature mapping where you need concise summaries of dozens or hundreds of papers.
+
+**Architecture:**
+```
+papers.csv → [for each paper] → Download PDF → Extract text → START → Summarize → END → paper_summaries.csv
+```
+
+**What it does:**
+1. Reads `data/papers.csv` (100 papers with arXiv URLs)
+2. Downloads each PDF (cached in `data/pdfs/` to avoid re-downloading)
+3. Extracts text from the PDF using `pypdf` (capped at 20 pages)
+4. Sends the text to an LLM via a LangGraph agent that produces a structured summary:
+   - **Objective** — what the paper aims to achieve
+   - **Method** — approach or methodology
+   - **Key Findings** — main results
+   - **Significance** — why this work matters
+5. Writes all summaries to `data/paper_summaries.csv`
+
+**Key concepts:**
+- **PDF processing** — Download with `requests`, extract with `pypdf`, truncate to fit context
+- **Structured LLM output** — System prompt enforces a fixed summary format
+- **Batch processing with caching** — PDFs are cached locally, so re-runs skip downloads
+- **Per-paper memory** — Each paper gets a unique `thread_id`
+
+**Design doc:** [README_PAPER_SUMMARIZER.md](README_PAPER_SUMMARIZER.md)
+
+**Run:**
+```bash
+pip install pandas pypdf requests langchain-openai python-dotenv langgraph
+python langgraph_examples/example13_paper_summarizer.py
+```
+
+**Input:** `data/papers.csv` | **Output:** `data/paper_summaries.csv` + `data/pdfs/`
+
+---
+
+## 15. Debugging Tips
 
 ### Visualize Your Graph
 
@@ -1484,7 +1560,7 @@ Once set, every time you run your graph, it automatically appears in the LangSmi
 
 ---
 
-## 14. Quick Reference Cheat Sheet
+## 16. Quick Reference Cheat Sheet
 
 ### Installation
 ```bash
