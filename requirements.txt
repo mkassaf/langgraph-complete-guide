@@ -14,7 +14,7 @@ langchain-community
 langchain-chroma
 langchain-text-splitters
 
-# For Example 13 (Paper Summarizer - PDF download & extraction)
+# For Example 13 (Paper Summarizer) and agentic_screener (PDF input)
 pypdf
 requests
 
