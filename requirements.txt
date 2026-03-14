@@ -27,4 +27,5 @@ fpdf2
 
 # Optional: Alternative LLM providers
 # langchain-anthropic   # For Anthropic Claude
+anthropic   # For Chain of Thought demo (Agentic AI Solution Design Patterns)
 # langchain-ollama     # For local models via Ollama
