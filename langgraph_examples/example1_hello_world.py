@@ -38,8 +38,8 @@ def node_c(state: State) -> dict:
     return {"text": new_text}
 
 # ─── Step 3: Build the Graph ──────────────────────────────────────────────────
-# Create a StateGraph and tell it what our state looks like
-graph = StateGraph(State)
+# Create a StateGraph and tell it what our state looks like. so we have a graph that its nodes follow a certain structure
+graph = StateGraph(State) # In here we define our graph works on what state and our nodes (which are our nodes) should follow that structure
 
 # Add nodes: give each function a string name
 graph.add_node("node_a", node_a)
