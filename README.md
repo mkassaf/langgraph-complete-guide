@@ -1402,7 +1402,7 @@ Agent: The SpectraBook S is priced at $2,499.
 
 ## 13. Example 12 — Paper Screener (Reflection for Systematic Review)
 
-A practical, **research-oriented** agentic system that screens academic papers for a systematic review. It reads `data/papers.csv` (99 papers), applies an exclusion criterion using the **reflection pattern**, and outputs `data/screening_results.csv` with INCLUDE/EXCLUDE decisions and reasoning.
+A practical, **research-oriented** agentic system that screens academic papers for a systematic review. It reads `data/papers.csv` (a sample dataset — add your own papers to extend it), applies an exclusion criterion using the **reflection pattern**, and outputs `data/screening_results.csv` with INCLUDE/EXCLUDE decisions and reasoning.
 
 **Why reflection for screening?** A single LLM call can misapply nuanced criteria (e.g., incorrectly excluding arXiv papers). The reflection loop catches these mistakes: a reviewer checks the screener's logic, and the screener revises if needed.
 
@@ -1444,7 +1444,7 @@ papers.csv → [for each paper] → Download PDF → Extract text → START → 
 ```
 
 **What it does:**
-1. Reads `data/papers.csv` (100 papers with arXiv URLs)
+1. Reads `data/papers.csv` (a sample of papers with arXiv URLs — extend with your own)
 2. Downloads each PDF (cached in `data/pdfs/` to avoid re-downloading)
 3. Extracts text from the PDF using `pypdf` (capped at 20 pages)
 4. Sends the text to an LLM via a LangGraph agent that produces a structured summary:
