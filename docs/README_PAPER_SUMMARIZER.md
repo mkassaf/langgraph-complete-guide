@@ -27,7 +27,7 @@ Reading and summarizing dozens or hundreds of papers is one of the most time-con
                     │                                                  │
                     │  For each paper:                                 │
   papers.csv ──►   │    1. Download PDF from URL                      │  ──► paper_summaries.csv
-  (100 papers)     │    2. Extract text (pypdf)                       │      (100 summaries)
+  (N papers)       │    2. Extract text (pypdf)                       │      (N summaries)
                     │    3. START → Summarize → END                   │
                     │                                                  │
                     │  PDFs cached in data/pdfs/                       │
@@ -186,8 +186,8 @@ pip install pandas pypdf requests langchain-openai python-dotenv langgraph
 python langgraph_examples/example13_paper_summarizer.py
 ```
 
-**Input:** `data/papers.csv` (100 papers)
-**Output:** `data/paper_summaries.csv` (100 summaries)
+**Input:** `data/papers.csv` (a sample of papers with arXiv URLs — extend with your own)
+**Output:** `data/paper_summaries.csv` (one summary per paper)
 **Cached PDFs:** `data/pdfs/` (one PDF per paper)
 
 The script prints progress as it downloads, extracts, and summarizes each paper.

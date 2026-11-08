@@ -358,6 +358,7 @@ def screen_papers(input_csv: Path, output_csv: Path,
         results.append(row_result)
 
     results_df = pd.DataFrame(results)
+    output_csv.parent.mkdir(parents=True, exist_ok=True)
     results_df.to_csv(output_csv, index=False, quoting=csv.QUOTE_ALL)
     print(f"\n{'=' * 60}")
     print(f"Screening complete. Results written to {output_csv.name}")

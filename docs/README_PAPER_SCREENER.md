@@ -84,7 +84,7 @@ After the reviewer's feedback, the screener revises its evaluation, producing a 
                     │                                                 │
                     │  For each paper × each criterion:               │
   papers.csv ──►   │  START → Screener → [should_continue?]          │  ──► screening_results.csv
-  (99 papers)      │                      │ yes    │ no              │      (99 decisions)
+  (N papers)       │                      │ yes    │ no              │      (N decisions)
                     │                      ▼        ▼                │
                     │                   Reviewer   END               │
                     │                      │                          │
@@ -273,7 +273,7 @@ pip install pandas langchain-openai python-dotenv langgraph
 python langgraph_examples/example12_paper_screener.py
 ```
 
-**Input:** `data/papers.csv` (99 papers)
-**Output:** `data/screening_results.csv` (99 decisions with per-criterion details)
+**Input:** `data/papers.csv` (a sample dataset — add your own papers to extend it)
+**Output:** `data/screening_results.csv` (one decision per paper with per-criterion details)
 
 The script prints progress as it screens each paper and a final summary with INCLUDE/EXCLUDE counts.
